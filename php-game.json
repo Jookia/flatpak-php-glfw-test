@@ -1,0 +1,118 @@
+{
+    "id": "my.php.game",
+    "branch": "22.08",
+    "runtime": "org.freedesktop.Platform",
+    "sdk": "org.freedesktop.Sdk",
+    "runtime-version": "22.08",
+    "finish-args": ["--device=all", "--socket=x11", "--share=ipc"],
+    "command": "run.sh",
+    "modules": [
+        {
+            "name": "libzip",
+            "buildsystem": "cmake-ninja",
+            "config-opts": [
+                "-DBUILD_TOOLS=OFF",
+                "-DBUILD_EXAMPLES=OFF",
+                "-DBUILD_DOC=OFF"
+            ],
+            "cleanup": [
+                "/include",
+                "/lib/cmake",
+                "/lib/pkgconfig",
+                "*.a",
+                "*.la"
+            ],
+            "sources": [
+                {
+                    "type": "archive",
+                    "url": "https://libzip.org/download/libzip-1.10.1.tar.xz",
+                    "sha256": "dc3c8d5b4c8bbd09626864f6bcf93de701540f761d76b85d7c7d710f4bd90318"
+                }
+            ]
+        },
+        {
+            "name": "php",
+            "buildsystem": "autotools",
+            "config-opts": [
+                "--enable-libgcc",
+                "--enable-option-checking=fatal",
+                "--disable-cgi",
+                "--enable-intl",
+                "--enable-mbstring",
+                "--enable-pcntl",
+                "--with-bz2",
+                "--with-curl",
+                "--with-openssl",
+                "--with-system-ciphers",
+                "--with-zip",
+                "--with-zlib"
+            ],
+            "sources": [
+                {
+                    "type": "archive",
+                    "url": "https://www.php.net/distributions/php-8.2.10.tar.xz",
+                    "sha256": "561dc4acd5386e47f25be76f2c8df6ae854756469159248313bcf276e282fbb3"
+                }
+            ]
+        },
+        {
+            "name": "glfw",
+            "buildsystem": "cmake",
+            "config-opts": [
+                "-DBUILD_SHARED_LIBS=ON"
+            ],
+            "sources": [
+                {
+                    "type": "archive",
+                    "url": "https://github.com/glfw/glfw/releases/download/3.3.8/glfw-3.3.8.zip",
+                    "sha256": "4d025083cc4a3dd1f91ab9b9ba4f5807193823e565a5bcf4be202669d9911ea6"
+                }
+            ]
+        },
+        {
+            "name": "php-glfw",
+            "buildsystem": "simple",
+            "build-commands": [
+                "phpize",
+                "./configure --enable-glfw --with-glfw-dir=/app",
+                "make install"
+            ],
+            "sources": [
+                {
+                    "type": "archive",
+                    "url": "https://github.com/mario-deluna/php-glfw/archive/refs/tags/v2.1.3.zip",
+                    "sha256": "5acab607adaed4708f445266dd13b2b6915362757766c67e50644d9183e9661a"
+                }
+            ]
+        },
+        {
+            "name": "game",
+            "buildsystem": "simple",
+            "build-commands": [
+                "cp /lib/*/libonig.so* /app/lib/",
+                "install -D run.sh /app/bin/run.sh",
+                "install -D game.php /app/bin/game.php",
+                "install -D 99_example_helpers.php /app/bin/99_example_helpers.php",
+                "install -D phplogo.png /app/bin/phplogo.png"
+            ],
+            "sources": [
+                {
+                    "type": "file",
+                    "path": "game/run.sh"
+                },
+                {
+                    "type": "file",
+                    "path": "game/99_example_helpers.php"
+                },
+                {
+                    "type": "file",
+                    "path": "game/game.php"
+                },
+                {
+                    "type": "file",
+                    "path": "game/phplogo.png"
+                }
+            ]
+        }
+    ]
+}

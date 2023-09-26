@@ -1,0 +1,19 @@
+DISCLAIMER:
+
+- This repo is a proof of concept. Learn Flatpak and clean it up!
+
+Usage:
+
+flatpak-builder build-dir php-game.json --force-clean --user --install && flatpak run my.php.game
+
+To upload online:
+
+flatpak-builder --repo=REPO build-dir php-game.json
+(then upload REPO dir to a website)
+(then upload flatpakref to a website, make sure it has your correct UR)
+
+To install:
+
+flatpak install --user http://blane.jookia.org/game.flatpakref
+
+Then run flatpak run my.php.game
